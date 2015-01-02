@@ -1,6 +1,7 @@
 # Reverse Madlibs #
 
 "That litho spurred changeability can bestow timeously like a comeuppance!"
+"Meet me at mom's house with a cycle, a parsonage and a stook! We are going to leak!"
 
 __Features of Reverse Madlibs Command Line Game__
   1. Prompts user for a sentence with `NOUN`s, `VERB`s, `ADJECTIVE`s and/or `ADVERB`s

@@ -40,48 +40,31 @@ def collect_and_validate_input(msg, type) # <= String, Symbol
   end
 end # => String
 
+def fetch_from_file(filename, letter) # <= String
+  if letter != ""
+    loop do
+      word = (File.readlines("./FILTERED_parts_of_speech_lists/#{filename}.txt").sample.strip).split("")
+      return word.join if word[0].downcase == letter.downcase
+    end
+  else
+    return File.readlines("./FILTERED_parts_of_speech_lists/#{filename}.txt").sample.strip
+  end
+end # => String
+
 def fetch_madlib_word(sym, letter = "") # <= Symbol, String
   case sym
   
     when :noun
-      if letter != ""
-        loop do
-          word = (File.readlines("./FILTERED_parts_of_speech_lists/nouns.txt").sample.strip).split("")
-          return word.join if word[0].downcase == letter.downcase
-        end
-      else
-        return File.readlines("./FILTERED_parts_of_speech_lists/nouns.txt").sample.strip
-      end
+      return fetch_from_file("nouns", letter)
       
     when :adverb 
-      if letter != ""
-        loop do
-          word = (File.readlines("./FILTERED_parts_of_speech_lists/adverbs.txt").sample.strip).split("")
-          return word.join if word[0].downcase == letter.downcase
-        end
-      else
-        return File.readlines("./FILTERED_parts_of_speech_lists/adverbs.txt").sample.strip
-      end
+      return fetch_from_file("adverbs", letter)
       
     when :verb
-      if letter != ""
-        loop do
-          word = (File.readlines("./FILTERED_parts_of_speech_lists/verbs.txt").sample.strip).split("")
-          return word.join if word[0].downcase == letter.downcase
-        end
-      else
-        return File.readlines("./FILTERED_parts_of_speech_lists/verbs.txt").sample.strip
-      end
+      return fetch_from_file("verbs", letter)
       
     when :adjective 
-      if letter != ""
-        loop do
-          word = (File.readlines("./FILTERED_parts_of_speech_lists/adjectives.txt").sample.strip).split("")
-          return word.join if word[0].downcase == letter.downcase
-        end
-      else
-        return File.readlines("./FILTERED_parts_of_speech_lists/adjectives.txt").sample.strip
-      end
+      return fetch_from_file("adjectives", letter)
   end
 end # => String
 
