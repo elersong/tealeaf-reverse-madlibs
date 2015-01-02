@@ -1,5 +1,7 @@
 # Reverse Madlibs #
 
+"That litho spurred changeability can bestow timeously like a comeuppance!"
+
 __Features of Reverse Madlibs Command Line Game__
   1. Prompts user for a sentence with `NOUN`s, `VERB`s, `ADJECTIVE`s and/or `ADVERB`s
   2. Always adds new sentences to the end of a sentence list during a user prompt
@@ -7,7 +9,8 @@ __Features of Reverse Madlibs Command Line Game__
   
 __Downfalls__
   1. There's no way to conjugate verbs from their infinitive version
-  2. Nouns currently can only be pluralized by adding an "s". There's no way to differentiate when to use "es".
+  2. Attempts to simply congugate by adding "-ing" or "-s" often result in incorrect spellings 
+  3. Nouns currently can only be pluralized by adding an "s". There's no way to differentiate when to use "es".
   
 ## References to Lists that Contributed
   + **Nouns List:** Found [here](http://www.desiquintans.com/articles.php?page=nounlist)

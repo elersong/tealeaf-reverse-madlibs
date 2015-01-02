@@ -102,17 +102,21 @@ end # => String
 
 def valid?(input, type) # <= String, Symbol
   if type == :select
-    (input =~ /[0123456789]/) && input.length == 1
+    return (input =~ /[0123456789]/) && input.length == 1
   elsif type == :sentence
-    input.include? "NOUN"||"ADVERB"||"ADJECTIVE"||"VERB"
+    return true if input.include? "NOUN"
+    return true if input.include? "VERB"
+    return true if input.include? "ADJECTIVE"
+    return true if input.include? "ADVERB"
   elsif type == :again
-    (input =~ /[YNyn]/)
+    return (input =~ /[YNyn]/)
   end
+  false
 end # => Boolean
 
 def add_sentence_to_catalogue_if_unique(template) # <= String
   all_sentences = File.readlines("sentences.txt")
-  unless all_sentences.include? template
+  unless all_sentences.include? "#{template}\n"
     File.open("sentences.txt", "a+") do |file|
       file << "#{template}\n"
     end
@@ -172,10 +176,15 @@ loop do
       selection = collect_and_validate_input print_menu, :select
       
     when "3" # enter new sentence
+      print_header
+      most_recent_sentence = collect_and_validate_input "Please enter a template sentence:", :sentence
+      puts ""
+      say make_madlib most_recent_sentence
+      selection = collect_and_validate_input print_menu, :select
+    
     when "4" 
       print_header
       say "Thanks for playing!"
       break # end the loop
   end
 end 
-
