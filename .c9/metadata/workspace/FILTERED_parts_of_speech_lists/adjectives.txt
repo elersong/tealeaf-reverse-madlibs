@@ -1,1 +1,1 @@
-{}
+{"filter":false,"title":"adjectives.txt","tooltip":"/FILTERED_parts_of_speech_lists/adjectives.txt","undoManager":{"mark":-1,"position":-1,"stack":[]},"ace":{"folds":[],"scrolltop":0,"scrollleft":0,"selection":{"start":{"row":0,"column":0},"end":{"row":0,"column":0},"isBackwards":true},"options":{"guessTabSize":true,"useWrapMode":false,"wrapToView":true},"firstLineState":0},"timestamp":1420167031732,"hash":"359a535357086dad78f8753d5b76a97a68e70981"}
