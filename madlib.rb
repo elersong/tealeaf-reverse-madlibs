@@ -32,7 +32,7 @@ def print_header(instructions = false) # <= Boolean
     puts ""
     
     loop do
-      if (prompt "Press [enter] to start. Press [A] and then [enter] for alliteration mode (much slower).") == "a" || "A"
+      if (prompt "Press [enter] to start in normal mode. Press [A] and then [enter] for alliteration mode (much slower).").downcase == "a"
         print_header
         return true
       else
@@ -68,8 +68,16 @@ def make_madlib(template, alliteration = false) # <= String
     letter = ""
   end
   
-  words_in_sentence.each do |word|
+  words_in_sentence.each_with_index do |word, index|
+    
+    is_a_noun = true if word.include? "NOUN" # this chunk checks whether or not to change "a" to "an"
+    vowels = %w(a e i o u)
     word.gsub!("NOUN", fetch_madlib_word(:noun, letter))
+    first_letter_of_word = words_in_sentence[index].split("")[0].downcase
+    if is_a_noun && (words_in_sentence[index - 1] == "a") && (vowels.include? first_letter_of_word)
+      words_in_sentence[index-1] = "an"
+    end
+
     word.gsub!("ADVERB", fetch_madlib_word(:adverb, letter))
     word.gsub!("ADJECTIVE", fetch_madlib_word(:adjective, letter))
     word.gsub!("VERB", fetch_madlib_word(:verb, letter))
@@ -201,12 +209,13 @@ loop do
       templates = File.readlines("sentences.txt")
       say "Select a template by number:"
       if templates.count > 10
-        templates.sample(10).each_with_index do |template, index|
+        catalog = templates.sample(10)
+        catalog.each_with_index do |template, index|
           say "#{index+1}) #{template}"
         end
         template_choice = (collect_and_validate_input "", :select).to_i
         print_header
-        most_recent_sentence = templates[template_choice - 1]
+        most_recent_sentence = catalog[template_choice - 1]
         say make_madlib most_recent_sentence, alliteration_mode
       else
         templates.each_with_index do |template, index|
