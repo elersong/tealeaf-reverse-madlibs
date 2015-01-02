@@ -38,6 +38,7 @@ def print_header(instructions = false) # <= Boolean
       end
     end
   end
+  puts ""
 end # => nil
 
 def say(msg) # <= String
@@ -79,7 +80,6 @@ def fetch_madlib_word(sym) # <= Symbol
 end # => String
 
 def collect_and_validate_input(msg, type) # <= String, Symbol
-  #binding.pry
   input = msg.nil? ? gets.chomp : prompt(msg)
   
   if valid?(input, type) && type == :sentence
@@ -102,7 +102,7 @@ end # => String
 
 def valid?(input, type) # <= String, Symbol
   if type == :select
-    (input =~ /[1234]/) && input.length == 1
+    (input =~ /[0123456789]/) && input.length == 1
   elsif type == :sentence
     input.include? "NOUN"||"ADVERB"||"ADJECTIVE"||"VERB"
   elsif type == :again
@@ -113,7 +113,6 @@ end # => Boolean
 def add_sentence_to_catalogue_if_unique(template) # <= String
   all_sentences = File.readlines("sentences.txt")
   unless all_sentences.include? template
-    binding.pry
     File.open("sentences.txt", "a+") do |file|
       file << "#{template}\n"
     end
@@ -122,7 +121,7 @@ end # => nil
 
 def print_menu # <= nil
   puts ""
-  say "Please select an option:"
+  say "Please select an option by number:"
   say "  1) Run that sentence again!"
   say "  2) Choose a sentence from your catalog."
   say "  3) Enter a new sentence."
@@ -135,19 +134,43 @@ end
 print_header true
 print_header
 
-first_sentence = collect_and_validate_input "Please enter a template sentence:", :sentence
+most_recent_sentence = collect_and_validate_input "Please enter a template sentence:", :sentence
 puts ""
-say make_madlib first_sentence
+say make_madlib most_recent_sentence
 
 selection = collect_and_validate_input print_menu, :select
 
 loop do
   case selection
+  
     when "1" # run same template again
       print_header
-      say make_madlib File.readlines("sentences.txt")[-1]
+      say make_madlib most_recent_sentence
       selection = collect_and_validate_input print_menu, :select
+      
     when "2" # select template from catalogue
+      print_header
+      templates = File.readlines("sentences.txt")
+      say "Select a template by number:"
+      if templates.count > 10
+        templates.sample!(10).each_with_index do |template, index|
+          say "#{index+1}) #{template}"
+        end
+        template_choice = (collect_and_validate_input "", :select).to_i
+        print_header
+        most_recent_sentence = templates[template_choice - 1]
+        say make_madlib most_recent_sentence
+      else
+        templates.each_with_index do |template, index|
+          say "#{index+1}) #{template}"
+        end
+        template_choice = (collect_and_validate_input "", :select).to_i
+        print_header
+        most_recent_sentence = templates[template_choice - 1]
+        say make_madlib most_recent_sentence
+      end
+      selection = collect_and_validate_input print_menu, :select
+      
     when "3" # enter new sentence
     when "4" 
       print_header
