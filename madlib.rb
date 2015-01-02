@@ -175,7 +175,7 @@ end # => nil
 
 def valid?(input, type) # <= String, Symbol
   if type == :select
-    return (input =~ /[0123456789]/) && input.length == 1
+    return (input =~ /^[0123456789]+$/)
   elsif type == :sentence
     return true if input.include? "NOUN"
     return true if input.include? "VERB"
