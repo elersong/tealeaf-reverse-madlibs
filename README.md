@@ -1,9 +1,9 @@
 # Reverse Madlibs #
 
 Features of Reverse Madlibs Command Line Game
-  1. Either build sentences automatically or prompt user for input words
-  2. Always adds new words to the end of the list during a user prompt
-  3. 
+  1. Prompts user for a sentence with `NOUN`s, `VERB`s, `ADJECTIVE`s and/or `ADVERB`s
+  2. Always adds new sentences to the end of a sentence list during a user prompt
+  3. Randomly selects a sentence from the sentence list to use as a help eaxample during the prompt
   
 ## References to Lists that Contributed
   + **Nouns List:** Found [here](http://www.desiquintans.com/articles.php?page=nounlist)
