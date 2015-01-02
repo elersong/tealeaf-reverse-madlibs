@@ -1,3 +1,4 @@
+require 'pry'
 # Pseudocode Algorithm
 # ====================
 # 1. Explain to user how a "reverse madlib" works
@@ -27,7 +28,7 @@ def print_header(instructions = false) # <= Boolean
     say "'#{example_sentence}'"
     puts ""
     say "Becomes this:"
-    say "'#{madlib example_sentence}'"
+    say "'#{make_madlib example_sentence}'"
     puts ""
     
     loop do
@@ -37,7 +38,6 @@ def print_header(instructions = false) # <= Boolean
       end
     end
   end
-  
 end # => nil
 
 def say(msg) # <= String
@@ -50,11 +50,11 @@ def prompt(msg) # <= String
 end # => String
 
 def get_random_sentence # <= nil
-  all_sentences = File.readlines("sentences.txt", "r")
-  all_sentences.sample
+  all_sentences = File.readlines("sentences.txt")
+  all_sentences.sample.strip
 end # => String
 
-def madlib(template) # <= String
+def make_madlib(template) # <= String
   words_in_sentence = template.split(" ")
   words_in_sentence.each do |word|
     word.gsub!("NOUN", fetch_madlib_word(:noun))
@@ -78,6 +78,81 @@ def fetch_madlib_word(sym) # <= Symbol
   end
 end # => String
 
+def collect_and_validate_input(msg, type) # <= String, Symbol
+  #binding.pry
+  input = msg.nil? ? gets.chomp : prompt(msg)
+  
+  if valid?(input, type) && type == :sentence
+    add_sentence_to_catalogue_if_unique input
+    return input
+  elsif valid?(input, type) && type == :select
+    return input
+  elsif type == :select
+    print_header
+    print_menu
+    puts ""
+    puts "INVALID INPUT: Please try again"
+    input = collect_and_validate_input msg, type
+  else
+    print_header
+    puts "INVALID INPUT: Please try again"
+    input = collect_and_validate_input msg, type
+  end
+end # => String
+
+def valid?(input, type) # <= String, Symbol
+  if type == :select
+    (input =~ /[1234]/) && input.length == 1
+  elsif type == :sentence
+    input.include? "NOUN"||"ADVERB"||"ADJECTIVE"||"VERB"
+  elsif type == :again
+    (input =~ /[YNyn]/)
+  end
+end # => Boolean
+
+def add_sentence_to_catalogue_if_unique(template) # <= String
+  all_sentences = File.readlines("sentences.txt")
+  unless all_sentences.include? template
+    binding.pry
+    File.open("sentences.txt", "a+") do |file|
+      file << "#{template}\n"
+    end
+  end
+end # => nil
+
+def print_menu # <= nil
+  puts ""
+  say "Please select an option:"
+  say "  1) Run that sentence again!"
+  say "  2) Choose a sentence from your catalog."
+  say "  3) Enter a new sentence."
+  say "  4) Exit."
+  puts ""
+end
+
 
 # ===================== Program Logic
 print_header true
+print_header
+
+first_sentence = collect_and_validate_input "Please enter a template sentence:", :sentence
+puts ""
+say make_madlib first_sentence
+
+selection = collect_and_validate_input print_menu, :select
+
+loop do
+  case selection
+    when "1" # run same template again
+      print_header
+      say make_madlib File.readlines("sentences.txt")[-1]
+      selection = collect_and_validate_input print_menu, :select
+    when "2" # select template from catalogue
+    when "3" # enter new sentence
+    when "4" 
+      print_header
+      say "Thanks for playing!"
+      break # end the loop
+  end
+end 
+
