@@ -32,14 +32,17 @@ def print_header(instructions = false) # <= Boolean
     puts ""
     
     loop do
-      if (prompt "Press [enter] to start") == ""
+      if (prompt "Press [enter] to start. Press [A] and then [enter] for alliteration mode (much slower).") == "a" || "A"
         print_header
-        break
+        return true
+      else
+        print_header
+        return false
       end
     end
   end
   puts ""
-end # => nil
+end # => Boolean
 
 def say(msg) # <= String
   puts " => #{msg}"
@@ -55,27 +58,67 @@ def get_random_sentence # <= nil
   all_sentences.sample.strip
 end # => String
 
-def make_madlib(template) # <= String
+def make_madlib(template, alliteration = false) # <= String
   words_in_sentence = template.split(" ")
+  
+  # Alliteration mode
+  if alliteration
+    letter = %w(a b c d e f g h i j k l m n o p q r s t u v w x y z).sample
+  else
+    letter = ""
+  end
+  
   words_in_sentence.each do |word|
-    word.gsub!("NOUN", fetch_madlib_word(:noun))
-    word.gsub!("ADVERB", fetch_madlib_word(:adverb))
-    word.gsub!("ADJECTIVE", fetch_madlib_word(:adjective))
-    word.gsub!("VERB", fetch_madlib_word(:verb))
+    word.gsub!("NOUN", fetch_madlib_word(:noun, letter))
+    word.gsub!("ADVERB", fetch_madlib_word(:adverb, letter))
+    word.gsub!("ADJECTIVE", fetch_madlib_word(:adjective, letter))
+    word.gsub!("VERB", fetch_madlib_word(:verb, letter))
   end
   words_in_sentence.join(" ")
 end # => String
 
-def fetch_madlib_word(sym) # <= Symbol
+def fetch_madlib_word(sym, letter = "") # <= Symbol, String
   case sym
+  
     when :noun
-      return File.readlines("./FILTERED_parts_of_speech_lists/nouns.txt").sample.strip
+      if letter != ""
+        loop do
+          word = (File.readlines("./FILTERED_parts_of_speech_lists/nouns.txt").sample.strip).split("")
+          return word.join if word[0].downcase == letter.downcase
+        end
+      else
+        return File.readlines("./FILTERED_parts_of_speech_lists/nouns.txt").sample.strip
+      end
+      
     when :adverb 
-      return File.readlines("./FILTERED_parts_of_speech_lists/adverbs.txt").sample.strip
+      if letter != ""
+        loop do
+          word = (File.readlines("./FILTERED_parts_of_speech_lists/adverbs.txt").sample.strip).split("")
+          return word.join if word[0].downcase == letter.downcase
+        end
+      else
+        return File.readlines("./FILTERED_parts_of_speech_lists/adverbs.txt").sample.strip
+      end
+      
     when :verb
-      return File.readlines("./FILTERED_parts_of_speech_lists/verbs.txt").sample.strip
+      if letter != ""
+        loop do
+          word = (File.readlines("./FILTERED_parts_of_speech_lists/verbs.txt").sample.strip).split("")
+          return word.join if word[0].downcase == letter.downcase
+        end
+      else
+        return File.readlines("./FILTERED_parts_of_speech_lists/verbs.txt").sample.strip
+      end
+      
     when :adjective 
-      return File.readlines("./FILTERED_parts_of_speech_lists/adjectives.txt").sample.strip
+      if letter != ""
+        loop do
+          word = (File.readlines("./FILTERED_parts_of_speech_lists/adjectives.txt").sample.strip).split("")
+          return word.join if word[0].downcase == letter.downcase
+        end
+      else
+        return File.readlines("./FILTERED_parts_of_speech_lists/adjectives.txt").sample.strip
+      end
   end
 end # => String
 
@@ -135,12 +178,13 @@ end
 
 
 # ===================== Program Logic
-print_header true
+
+alliteration_mode = print_header true
 print_header
 
 most_recent_sentence = collect_and_validate_input "Please enter a template sentence:", :sentence
 puts ""
-say make_madlib most_recent_sentence
+say make_madlib most_recent_sentence, alliteration_mode
 
 selection = collect_and_validate_input print_menu, :select
 
@@ -149,7 +193,7 @@ loop do
   
     when "1" # run same template again
       print_header
-      say make_madlib most_recent_sentence
+      say make_madlib most_recent_sentence, alliteration_mode
       selection = collect_and_validate_input print_menu, :select
       
     when "2" # select template from catalogue
@@ -157,13 +201,13 @@ loop do
       templates = File.readlines("sentences.txt")
       say "Select a template by number:"
       if templates.count > 10
-        templates.sample!(10).each_with_index do |template, index|
+        templates.sample(10).each_with_index do |template, index|
           say "#{index+1}) #{template}"
         end
         template_choice = (collect_and_validate_input "", :select).to_i
         print_header
         most_recent_sentence = templates[template_choice - 1]
-        say make_madlib most_recent_sentence
+        say make_madlib most_recent_sentence, alliteration_mode
       else
         templates.each_with_index do |template, index|
           say "#{index+1}) #{template}"
@@ -171,7 +215,7 @@ loop do
         template_choice = (collect_and_validate_input "", :select).to_i
         print_header
         most_recent_sentence = templates[template_choice - 1]
-        say make_madlib most_recent_sentence
+        say make_madlib most_recent_sentence, alliteration_mode
       end
       selection = collect_and_validate_input print_menu, :select
       
@@ -179,7 +223,7 @@ loop do
       print_header
       most_recent_sentence = collect_and_validate_input "Please enter a template sentence:", :sentence
       puts ""
-      say make_madlib most_recent_sentence
+      say make_madlib most_recent_sentence, alliteration_mode
       selection = collect_and_validate_input print_menu, :select
     
     when "4" 
