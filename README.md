@@ -1,11 +1,11 @@
 # Reverse Madlibs #
 
-_Features of Reverse Madlibs Command Line Game_
+__Features of Reverse Madlibs Command Line Game__
   1. Prompts user for a sentence with `NOUN`s, `VERB`s, `ADJECTIVE`s and/or `ADVERB`s
   2. Always adds new sentences to the end of a sentence list during a user prompt
   3. Randomly selects a sentence from the sentence list to use as a help eaxample during the prompt
   
-_Downfalls_
+__Downfalls__
   1. There's no way to conjugate verbs from their infinitive version
   2. Nouns currently can only be pluralized by adding an "s". There's no way to differentiate when to use "es".
   
